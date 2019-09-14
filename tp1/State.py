@@ -26,6 +26,7 @@ class State:
     """
     def move(self, c, d):
         # TODO
+        # copy by values
         new_pos = copy.deepcopy(self.pos)
         new_pos[c] = new_pos[c] + d
         new_state = State(new_pos)
