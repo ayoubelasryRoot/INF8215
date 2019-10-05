@@ -2,6 +2,7 @@ from collections import deque
 import heapq
 import numpy as np
 from State import State
+import queue
 
 class Rushhour:
     
@@ -85,6 +86,20 @@ class Rushhour:
 
 
     def solve(self, state: State):
+        done = False
+        priority_states = queue.Queue()
+        priority_states.put(state)
+        visted_states = {}
+        while not done:
+            current: State = priority_states.get()
+            if current.success():
+                return current
+            next_moves = self.possible_moves(current)
+            for next_state in next_moves:
+                state_code = next_state.__hash__()
+                if state_code not in visted_states:
+                    priority_states.put(next_state)
+                    visted_states[state_code] = 1
         return None
     
                     
@@ -101,5 +116,28 @@ class Rushhour:
     
                     
     def print_solution(self, state):
-        # TODO
-        return 0
+        steps = []
+        current_state = state
+        while current_state.prev is not None:
+            car = 0
+            for i in range(6):
+                move = ""
+                if current_state.pos[i] != current_state.prev.pos[i]:
+                    car = i
+                    if current_state.pos[i] > current_state.prev.pos[i]:
+                        if self.horiz[i] == True:
+                            move = "droite"
+                        else:
+                            move = "bas"
+                    elif current_state.pos[i] < current_state.prev.pos[i]:
+                        if self.horiz[i] == True:
+                            move = "gauche"
+                        else:
+                            move = "haut"
+                    break
+            steps.append(("Voiture {} vers la {}".format(self.color[car], move)))
+            current_state = current_state.prev
+        k = 0
+        for i in reversed(range(len(steps))):
+            k += 1
+            print("{}. {}".format(k, steps[i])
