@@ -140,4 +140,4 @@ class Rushhour:
         k = 0
         for i in reversed(range(len(steps))):
             k += 1
-            print("{}. {}".format(k, steps[i])
+            print("{}. {}".format(k, steps[i]))
