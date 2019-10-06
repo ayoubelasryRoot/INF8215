@@ -38,14 +38,16 @@ class Rushhour:
             left_pointer = y - 1
             rigth_pointer = y + self.length[i]
             while left_pointer != -1 or rigth_pointer != 6:
-                new_x, new_y = self.x_y_from_horz(self.horiz[i], x, left_pointer)
+                new_x, new_y = self.x_y_from_horz(
+                    self.horiz[i], x, left_pointer)
                 if left_pointer >= 0 and self.free_pos[new_x][new_y]:
                     state_left = self.move_left_or_up(i, state_left)
                     pos_states.append(state_left)
                     left_pointer -= 1
                 else:
                     left_pointer = -1
-                new_x, new_y = self.x_y_from_horz(self.horiz[i], x, rigth_pointer)
+                new_x, new_y = self.x_y_from_horz(
+                    self.horiz[i], x, rigth_pointer)
                 if rigth_pointer < 6 and self.free_pos[new_x][new_y]:
                     state_rigth = self.move_rigth_or_down(i, state_rigth)
                     pos_states.append(state_rigth)
@@ -53,7 +55,6 @@ class Rushhour:
                 else:
                     rigth_pointer = 6
         return pos_states
-
 
     def x_y_from_horz(self, horz, x, y):
         x_prime = x
@@ -109,8 +110,8 @@ class Rushhour:
     def print_solution(self, state):
         steps = []
         current_state = state
+        car = 0
         while current_state.prev is not None:
-            car = -1
             vec_change = current_state.pos - current_state.prev.pos
             pos_changed = np.nonzero(np.absolute(vec_change) == 1)[0]
             if len(pos_changed) > 0:
@@ -119,10 +120,9 @@ class Rushhour:
                     move = "la droite" if self.horiz[car] else "le bas"
                 elif vec_change[car] < 0:
                     move = "la gauche" if self.horiz[car] else "le haut"
-            if car != -1:
-                steps.append(("Voiture {} vers {}".format(self.color[car], move)))
-                current_state = current_state.prev
+            steps.append(("Voiture {} vers {}".format(self.color[car], move)))
+            current_state = current_state.prev
         k = 0
-        for i in reversed(range(len(steps))):
+        for step in reversed(steps):
             k += 1
-            print("{}. {}".format(k, steps[i]))
+            print("{}. {}".format(k, step))
