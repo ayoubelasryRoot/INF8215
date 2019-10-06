@@ -32,11 +32,13 @@ class Rushhour:
         # each car we can move is a possible state
         for i in range(self.nbcars):
             x = self.move_on[i]
-            y = state.pos[i]
             state_left = state
             state_rigth = state
-            left_pointer = y - 1
-            rigth_pointer = y + self.length[i]
+            # left pointer move left or up
+            left_pointer = state.pos[i] - 1
+            # right pointer move rigth or down
+            rigth_pointer = state.pos[i] + self.length[i]
+            # here we check when we move left or up
             while left_pointer != -1 or rigth_pointer != 6:
                 if left_pointer >= 0:
                     is_place_free = self.free_pos[x][left_pointer] if self.horiz[i] else self.free_pos[left_pointer][x]
@@ -48,6 +50,7 @@ class Rushhour:
                         left_pointer = -1
                 else:
                     left_pointer = -1
+                # here we check when we move dow or rigth
                 if rigth_pointer < 6:
                     is_place_free = self.free_pos[x][rigth_pointer] if self.horiz[i] else self.free_pos[rigth_pointer][x]
                     if is_place_free:
