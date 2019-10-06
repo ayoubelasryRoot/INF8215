@@ -33,6 +33,8 @@ class State:
         new_state.prev = copy.deepcopy(self)
         new_state.c = c
         new_state.d = d
+        new_state.nb_moves = self.nb_moves + 1
+        
         return new_state
 
 
@@ -49,12 +51,46 @@ class State:
     """
     def estimee1(self):
         # TODO
-        return 0
+        return 4 - self.pos[0]
+
 
     def estimee2(self, rh):
         # TODO
-        return 0
+
+        carsBetweenExit = 0
+        for i in range(1, rh.nbcars):
+            if not rh.horiz[i]:
+                if rh.move_on[i]  >= self.pos[0] + 2:
+                    if rh.length[i] == 2 and (self.pos[i] == 1 or self.pos[i] == 2):
+                        carsBetweenExit += 1
+                    else :
+                        if rh.length[i] == 3 and self.pos[i] <= 2:
+                            carsBetweenExit += 1 
+
+        return self.estimee1() + carsBetweenExit
     
+
+    def estimee3(self, rh):
+        # TODO
+
+        carsToMove = 0
+        for i in range(1, rh.nbcars):
+            if not rh.horiz[i]:
+                if rh.move_on[i]  > self.pos[0] + 2:
+                    if rh.length[i] == 2 and self.pos[i] == 1 or self.pos[i] == 2:
+                        carsToMove += 1
+                    else :
+                        if rh.length[i] == 3 and self.pos[i] <= 2:
+                            carsToMove += 1
+                            for j in range (1, rh.nbcars):
+                                if rh.horiz[j] and rh.move_on[j] == 5:
+                                    if self.pos[j] <= rh.move_on[i] and self.pos[j] + rh.length[j] >= rh.move_on[i]:
+                                        carsToMove += 1 
+
+        return self.estimee1() + carsToMove
+
+
+
     def __eq__(self, other):
         if not isinstance(other, State):
             return NotImplemented
