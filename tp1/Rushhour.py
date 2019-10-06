@@ -40,7 +40,6 @@ class Rushhour:
             while left_pointer != -1 or rigth_pointer != 6:
                 new_x, new_y = self.x_y_from_horz(self.horiz[i], x, left_pointer)
                 if left_pointer >= 0 and self.free_pos[new_x][new_y]:
-                    is_place_free = self.free_pos[x][left_pointer] if self.horiz[i] else self.free_pos[left_pointer][x]
                     state_left = self.move_left_or_up(i, state_left)
                     pos_states.append(state_left)
                     left_pointer -= 1
