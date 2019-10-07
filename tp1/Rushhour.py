@@ -37,7 +37,7 @@ class Rushhour:
             state_rigth = state
             left_pointer = y - 1
             rigth_pointer = y + self.length[i]
-            # the main idead is when we check left vs rigth is the same operation as down vs up
+            # the main idea is when we check left vs right is the same operation as down vs up
             while left_pointer != -1 or rigth_pointer != 6:
                 new_x, new_y = self.x_y_from_horz(self.horiz[i], x, left_pointer)
                 if left_pointer >= 0 and self.free_pos[new_x][new_y]:

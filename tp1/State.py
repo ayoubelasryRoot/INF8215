@@ -75,6 +75,13 @@ class State:
                 if rh.move_on[i]  > self.pos[0] + 2:
                     if rh.length[i] == 2 and self.pos[i] == 1 or self.pos[i] == 2:
                         carsToMove += 1
+                        for j in range (1, rh.nbcars):
+                            if rh.horiz[j] and self.pos[i] == 1 and rh.move_on[j] == 0:
+                                if self.pos[j] <= rh.move_on[i] and self.pos[j] + rh.length[j] >= rh.move_on[i]:
+                                    carsToMove += 1
+                            if rh.horiz[j] and self.pos[i] == 1 and rh.move_on[j] == self.pos[i] + rh.length[i]:
+                                if self.pos[j] <= rh.move_on[i] and self.pos[j] + rh.length[j] >= rh.move_on[i]:
+                                    carsToMove += 1
                     else :
                         if rh.length[i] == 3 and self.pos[i] <= 2:
                             carsToMove += 1
