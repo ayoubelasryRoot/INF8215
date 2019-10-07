@@ -94,23 +94,17 @@ class Rushhour:
 
         priority_queue = []
         heapq.heappush(priority_queue, state)
-        nbStatesVisisted = 0
 
         while not done:
             current: State = heapq.heappop(priority_queue)
-            nbStatesVisisted += 1
             if current.success():
-                print("STATES VISITEEEDDD")
-                print(nbStatesVisisted)
                 return current
             next_moves = self.possible_moves(current)
             for next_state in next_moves:
                 if next_state not in visited:
-                    next_state.h = next_state.estimee3(
-                        self) + next_state.nb_moves
+                    next_state.h = next_state.estimee1()
                     visited.add(next_state)
                     heapq.heappush(priority_queue, next_state)
-        # TODO
         return None
 
     def print_solution(self, state):

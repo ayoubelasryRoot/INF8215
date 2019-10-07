@@ -49,14 +49,12 @@ class State:
     """
     Estimation du nombre de coup restants 
     """
+    
     def estimee1(self):
-        # TODO
         return 4 - self.pos[0]
 
 
     def estimee2(self, rh):
-        # TODO
-
         carsBetweenExit = 0
         for i in range(1, rh.nbcars):
             if not rh.horiz[i]:
@@ -71,8 +69,6 @@ class State:
     
 
     def estimee3(self, rh):
-        # TODO
-
         carsToMove = 0
         for i in range(1, rh.nbcars):
             if not rh.horiz[i]:
