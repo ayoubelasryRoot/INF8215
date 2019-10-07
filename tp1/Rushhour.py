@@ -37,17 +37,16 @@ class Rushhour:
             state_rigth = state
             left_pointer = y - 1
             rigth_pointer = y + self.length[i]
+            # the main idead is when we check left vs rigth is the same operation as down vs up
             while left_pointer != -1 or rigth_pointer != 6:
-                new_x, new_y = self.x_y_from_horz(
-                    self.horiz[i], x, left_pointer)
+                new_x, new_y = self.x_y_from_horz(self.horiz[i], x, left_pointer)
                 if left_pointer >= 0 and self.free_pos[new_x][new_y]:
                     state_left = self.move_left_or_up(i, state_left)
                     pos_states.append(state_left)
                     left_pointer -= 1
                 else:
                     left_pointer = -1
-                new_x, new_y = self.x_y_from_horz(
-                    self.horiz[i], x, rigth_pointer)
+                new_x, new_y = self.x_y_from_horz(self.horiz[i], x, rigth_pointer)
                 if rigth_pointer < 6 and self.free_pos[new_x][new_y]:
                     state_rigth = self.move_rigth_or_down(i, state_rigth)
                     pos_states.append(state_rigth)
@@ -57,6 +56,7 @@ class Rushhour:
         return pos_states
 
     def x_y_from_horz(self, horz, x, y):
+        # if you're not in horizontal mode we need to inverse x and y
         x_prime = x
         y_prime = y
         if not horz:
