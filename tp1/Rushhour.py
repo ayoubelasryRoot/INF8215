@@ -101,25 +101,18 @@ class Rushhour:
         steps = []
         current_state = state
         while current_state.prev is not None:
-            car = 0
-            for i in range(6):
-                move = ""
-                if current_state.pos[i] != current_state.prev.pos[i]:
-                    car = i
-                    if current_state.pos[i] > current_state.prev.pos[i]:
-                        if self.horiz[i] == True:
-                            move = "droite"
-                        else:
-                            move = "bas"
-                    elif current_state.pos[i] < current_state.prev.pos[i]:
-                        if self.horiz[i] == True:
-                            move = "gauche"
-                        else:
-                            move = "haut"
-                    break
-            steps.append(
-                ("Voiture {} vers la {}".format(self.color[car], move)))
-            current_state = current_state.prev
+            car = -1
+            vec_change = current_state.pos - current_state.prev.pos
+            pos_changed = np.nonzero(np.absolute(vec_change) == 1)[0]
+            if len(pos_changed) > 0:
+                car = pos_changed[0]
+                if vec_change[car] > 0:
+                    move = "la droite" if self.horiz[car] else "le bas"
+                elif vec_change[car] < 0:
+                    move = "la gauche" if self.horiz[car] else "le haut"
+            if car != -1:
+                steps.append(("Voiture {} vers {}".format(self.color[car], move)))
+                current_state = current_state.prev
         k = 0
         for i in reversed(range(len(steps))):
             k += 1
