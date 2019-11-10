@@ -29,6 +29,7 @@ class State:
 
     def put_rock(self, rock_pos):
         s = State(self.pos)
+        s.nb_moves = self.nb_moves
         s.rock = rock_pos
         return s
             
