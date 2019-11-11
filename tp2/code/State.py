@@ -117,7 +117,7 @@ class State:
                     else:
                         score += nb_blocking
         
-        if self.d == -1 and rh.horiz[self.c] == True and self.pos[self.c] <= rh.move_on[]
+        # if self.d == -1 and rh.horiz[self.c] == True and self.pos[self.c] <= rh.move_on[]
 
         prev_blocking_cars = self.get_blocking_cars(rh, self.prev)
         if len(blocking_cars) < len(prev_blocking_cars):
