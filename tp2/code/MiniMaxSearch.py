@@ -1,3 +1,5 @@
+import random 
+
 class MiniMaxSearch:
     def __init__(self, rushHour, initial_state, search_depth):
         self.rushhour = rushHour
@@ -9,6 +11,8 @@ class MiniMaxSearch:
 
     def minimax_1(self, current_depth, current_state):
         if current_depth == 0:
+            color = self.rushhour.color[current_state.c]
+            direction = current_state.d
             score = current_state.score_state(self.rushhour)
             current_state.score = score
             return current_state
@@ -19,6 +23,8 @@ class MiniMaxSearch:
         for state in pos_moves:
             if state not in self.visited:
                 child_state = self.minimax_1(current_depth -1, state)
+                color = self.rushhour.color[child_state.c]
+                direction = child_state.d
                 if child_state.score < best_score:
                     best_score = child_state.score
                     best_move = state
@@ -112,9 +118,43 @@ class MiniMaxSearch:
             return best_move
         return current_state
 
+    def calculate_average(self, array):
+        average = 0
+        for value in array:
+            average += value.score
+        return average / len(array)
+
     def expectimax(self, current_depth, current_state, is_max):
-        #TODO
-        return best_move
+        if current_depth == 0:
+            score = current_state.score_state(self.rushhour)
+            current_state.score = score
+            return current_state
+
+        best_move = current_state
+        best_score = float("inf")
+        if not is_max :
+            pos_moves = self.rushhour.possible_moves(current_state)
+        else:
+            best_score = float("-inf")
+            pos_moves = self.rushhour.possible_rock_moves(current_state)
+        for state in pos_moves:
+            child_state = self.expectimax(current_depth -1, state, not is_max)
+            if not is_max: 
+                if state not in self.visited:
+                    if child_state.score < best_score:
+                        best_score = child_state.score
+                        best_move = state
+                        current_state.score = child_state.score
+                    
+        if is_max:
+            average = self.calculate_average(pos_moves)
+            for state in pos_moves:
+                state.score = average
+            return pos_moves[random.randint(0, len(pos_moves) - 1)]
+
+        if current_depth == self.search_depth:
+            return best_move
+        return current_state
 
     def decide_best_move_1(self): # dispatcher
         if self.state.success() :
@@ -137,8 +177,10 @@ class MiniMaxSearch:
         
     
     def decide_best_move_expectimax(self, is_max):
-        # TODO
-        pass
+        if self.state.success() :
+            return self.state
+        else:
+            return self.expectimax(self.search_depth, self.state, is_max)
    
    
     def solve(self, state, is_singleplayer):
