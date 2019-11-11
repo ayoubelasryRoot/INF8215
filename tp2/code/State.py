@@ -72,7 +72,7 @@ class State:
             else:
                 return 15
         
-        score = 0
+        score = 0.5
 
         if previous_move_car in blocking_cars:
             if rh.length[previous_move_car] == 3:
@@ -117,7 +117,12 @@ class State:
                     else:
                         score += nb_blocking
         
-        # if self.d == -1 and rh.horiz[self.c] == True and self.pos[self.c] <= rh.move_on[]
+        if rh.horiz[self.c] == True :
+            if self.d == -1:
+                if self.prev.pos[self.c] + rh.length[self.c] > self.pos[0] + 2:
+                    return -1
+            else:
+                return 0.5
 
         prev_blocking_cars = self.get_blocking_cars(rh, self.prev)
         if len(blocking_cars) < len(prev_blocking_cars):
