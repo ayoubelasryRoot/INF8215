@@ -56,7 +56,7 @@ class SoftmaxClassifier(BaseEstimator, ClassifierMixin):
         one_hot_encoding = self._one_hot(y)
 
         for epoch in range(self.n_epochs):
-            probabilities = self.predict_proba(X, None)      
+            probabilities = self.predict_proba(X_bias, None)      
             prev_loss = self._cost_function(probabilities, one_hot_encoding)   
             self.theta_ = self.theta_ - self.lr*self._get_gradient(X_bias, one_hot_encoding, probabilities)
             
@@ -67,14 +67,14 @@ class SoftmaxClassifier(BaseEstimator, ClassifierMixin):
         return self
 
 
-    def predict_proba(self, X, y=None):
+    def predict_proba(self, X_bias, y=None):
         try:
             getattr(self, "theta_")
         except AttributeError:
             raise RuntimeError("You must train classifer before predicting data!")
         
-        X_bias = np.c_[np.ones(len(X)), X]
-        Z = np.matmul(X_bias, self.theta_)
+        #X_bias = np.c_[np.ones(len(X)), X]
+        Z = np.dot(X_bias, self.theta_)
         P_matrix = []
         for z in Z:
             P_matrix.append(self._softmax(z))
@@ -87,8 +87,8 @@ class SoftmaxClassifier(BaseEstimator, ClassifierMixin):
             getattr(self, "theta_")
         except AttributeError:
             raise RuntimeError("You must train classifer before predicting data!")
-        
-        P_matrix = self.predict_proba(X, y)
+        X_bias = np.c_[np.ones(len(X)) , X]
+        P_matrix = self.predict_proba(X_bias, y)
         return np.argmax(P_matrix, axis=1)
 
     
@@ -98,8 +98,9 @@ class SoftmaxClassifier(BaseEstimator, ClassifierMixin):
  
 
     def score(self, X_bias, one_hot_encoding=None):
-        predicted_classes = X_bias * self.theta_
-        loss = self._cost_function(predicted_classes, one_hot_encoding)
+        #predicted_classes = np.dot(X_bias , self.theta_)
+        probabilities = self.predict_proba(X_bias, one_hot_encoding)
+        loss = self._cost_function(probabilities, one_hot_encoding)
         return loss
     
     def _cost_function(self, probabilities, one_hot_encoding): 
@@ -115,7 +116,7 @@ class SoftmaxClassifier(BaseEstimator, ClassifierMixin):
     def _one_hot(self, y):
         matrix=np.zeros((len(y), self.nb_classes))
         for i in range(len(y)):
-            matrix[i][y[i][0]] = 1
+            matrix[i][y[i]] = 1
         return matrix
 
     
