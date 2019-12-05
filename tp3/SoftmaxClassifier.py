@@ -4,7 +4,7 @@ from math import exp, log
 
 class SoftmaxClassifier(BaseEstimator, ClassifierMixin):  
 
-    def __init__(self, lr = 0.1, alpha = 100, n_epochs = 1000, eps = 1.0e-5,threshold = 1.0e-10 , early_stopping = True):
+    def __init__(self, lr = 0.1, alpha = 100, n_epochs = 5, eps = 1.0e-5,threshold = 1.0e-10 , early_stopping = True):
        
         self.lr = lr 
         self.alpha = alpha
@@ -56,24 +56,24 @@ class SoftmaxClassifier(BaseEstimator, ClassifierMixin):
         one_hot_encoding = self._one_hot(y)
 
         for epoch in range(self.n_epochs):
-            probabilities = self.predict_proba(X_bias, None)      
+            probabilities = self.predict_proba(X, None)      
             prev_loss = self._cost_function(probabilities, one_hot_encoding)   
             self.theta_ = self.theta_ - self.lr*self._get_gradient(X_bias, one_hot_encoding, probabilities)
             
-            new_loss = self.score(X_bias, one_hot_encoding)
+            new_loss = self.score(X, one_hot_encoding)
             if self.early_stopping and abs(prev_loss - new_loss) < self.threshold:
-                pass
+                break
 
         return self
 
 
-    def predict_proba(self, X_bias, y=None):
+    def predict_proba(self, X, y=None):
         try:
             getattr(self, "theta_")
         except AttributeError:
             raise RuntimeError("You must train classifer before predicting data!")
         
-        #X_bias = np.c_[np.ones(len(X)), X]
+        X_bias = np.c_[np.ones(len(X)), X]
         Z = np.dot(X_bias, self.theta_)
         P_matrix = []
         for z in Z:
@@ -87,8 +87,8 @@ class SoftmaxClassifier(BaseEstimator, ClassifierMixin):
             getattr(self, "theta_")
         except AttributeError:
             raise RuntimeError("You must train classifer before predicting data!")
-        X_bias = np.c_[np.ones(len(X)) , X]
-        P_matrix = self.predict_proba(X_bias, y)
+        #X_bias = np.c_[np.ones(len(X)) , X]
+        P_matrix = self.predict_proba(X, y)
         return np.argmax(P_matrix, axis=1)
 
     

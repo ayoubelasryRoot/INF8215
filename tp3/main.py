@@ -34,6 +34,8 @@ PATH = "C:/Users/USER/Desktop/INF8215/INF8215/tp3/" # changer le path avec votre
 X_train = pd.read_csv(PATH + "adult.csv", encoding="utf-8-sig")
 X_test = pd.read_csv(PATH + "adult.csv")
 
+y_train = X_train['income']
+
 from sklearn.base import BaseEstimator, TransformerMixin
 ## Wrapper pour vous aider pour les pipelines
 class TransformationWrapper(BaseEstimator,TransformerMixin):
@@ -211,14 +213,14 @@ from sklearn.tree import DecisionTreeClassifier
 nb_run = 3
 
 models = [
-    DecisionTreeClassifier(),
-    LogisticRegression(),
+    #DecisionTreeClassifier(),
+    #LogisticRegression(),
     SoftmaxClassifier() # le modele que vous avez implémenté plus haut
 ]
 
 scoring = ['neg_log_loss', 'precision_macro','recall_macro','f1_macro']
 
-compare(models,X_train_preprocess,y_train_label,nb_run, scoring)
+compare(models,X_train_preprocess.to_numpy(),y_train_label,nb_run, scoring)
 
 
 
